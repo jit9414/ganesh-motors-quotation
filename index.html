@@ -79,12 +79,7 @@
 <button id="printBtn" onclick="window.print()">🖨️ Print Quotation</button>
 
 <script>
-  // Auto Date
-  const today = new Date();
-  document.getElementById("dateField").textContent =
-    today.getDate().toString().padStart(2,"0") + "/" +
-    (today.getMonth()+1).toString().padStart(2,"0") + "/" +
-    today.getFullYear();
+  Date: <input type="text" id="dateField" style="width:100px;" placeholder="dd/mm/yyyy">
 
   // Auto Quotation No
   let qNo = localStorage.getItem("quotationNo") || 1;

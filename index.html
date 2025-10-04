@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shri Ganesh Motors - Quotation</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 25px; }
+  .quotation {
+    width: 820px;
+    max-width: 100%;
+    border: 1px solid #000;
+    padding: 12px;
+  }
+  .header { text-align: center; }
+  .header h2 { margin: 2px 0; }
+  .header p { margin: 2px 0; font-size: 13px; }
+
+  .top-bar { display: flex; justify-content: space-between; font-size: 13px; margin: 5px 0; }
+
+  input[type="text"], input[type="number"] {
+    border: none; background: transparent; font-size: 13px; padding: 2px 4px;
+    outline: none;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  table, th, td { border: 1px solid #000; }
+  th, td { padding: 4px; text-align: left; }
+
+  .right { text-align: right; }
+  .total-row td { font-weight: bold; }
+  #printBtn { margin-top: 10px; padding: 6px 12px; font-size: 14px; background: #000; color:#fff; border: none; cursor: pointer; }
+
+  @media print {
+    #printBtn { display: none; }
+    input[type="text"], input[type="number"] { border: none !important; background: transparent !important; }
+  }
+</style>
+</head>
+<body>
+<div class="quotation">
+  <div class="header">
+    <h2>Shri Ganesh Motors</h2>
+    <p>Near Bus Stand, Bilara Road, Borunda, Jodhpur (Raj.)-342604<br>
+    M. 9929209414 | E-mail: shriganeshmotors734@gmail.com<br>
+    GSTIN No.: 08CZKPB5527L1Z2</p>
+    <h3>ENQUIRY / QUOTATION</h3>
+  </div>
+
+  <div class="top-bar">
+    <div>Quotation No.: <span id="quoteNo"></span></div>
+    <div>Date: <span id="dateField"></span></div>
+  </div>
+
+  <p>Name: <input type="text" style="width:200px;"> Model: <input type="text" style="width:120px;"> Type/Option: <input type="text" style="width:150px;"> Colour: <input type="text" style="width:100px;"></p>
+  <p>Phone: <input type="text" style="width:150px;"> Mobile: <input type="text" style="width:150px;"></p>
+  <p>Address: <input type="text" style="width:400px;"></p>
+  <p>Locality: <input type="text" style="width:150px;"> Tehsil: <input type="text" style="width:150px;"> Pin: <input type="text" style="width:100px;"></p>
+  <p>City: <input type="text" style="width:150px;"> Particulars: <input type="text" style="width:250px;"></p>
+
+  <table>
+    <tr><th colspan="2">Charges</th><th>Amount (₹)</th></tr>
+    <tr><td colspan="2">Ex-Showroom Price</td><td><input type="number" class="charge" value="0"></td></tr>
+    <tr><td colspan="2">Insurance</td><td><input type="number" class="charge" value="0"></td></tr>
+    <tr><td colspan="2">Registration Amount</td><td><input type="number" class="charge" value="0"></td></tr>
+    <tr><td colspan="2">Hypothecation</td><td><input type="number" class="charge" value="0"></td></tr>
+    <tr><td colspan="2">Accessories</td><td><input type="number" class="charge" value="0"></td></tr>
+    <tr><td colspan="2">Other</td><td><input type="number" class="charge" value="0"></td></tr>
+    <tr><td colspan="2">Extended Warranty</td><td><input type="number" class="charge" value="0"></td></tr>
+    <tr class="total-row"><td colspan="2">Total Cost</td><td><span id="grandTotal">0</span></td></tr>
+  </table>
+
+
+  <p style="margin-top:20px;">Remarks: <input type="text" style="width:600px;"></p>
+  <p>Status: HOT / WARM / COLD</p>
+
+  <p style="text-align:right; margin-top:40px;">For: <b>Shri Ganesh Motors</b><br>Authorised Signatory</p>
+</div>
+
+<button id="printBtn" onclick="window.print()">🖨️ Print Quotation</button>
+
+<script>
+  // Auto Date
+  const today = new Date();
+  document.getElementById("dateField").textContent =
+    today.getDate().toString().padStart(2,"0") + "/" +
+    (today.getMonth()+1).toString().padStart(2,"0") + "/" +
+    today.getFullYear();
+
+  // Auto Quotation No
+  let qNo = localStorage.getItem("quotationNo") || 1;
+  document.getElementById("quoteNo").textContent = qNo;
+  localStorage.setItem("quotationNo", Number(qNo)+1);
+
+  function recalcAccessories(){
+    let rows = document.querySelectorAll("#accTable tr");
+    let sum = 0;
+    rows.forEach(r=>{
+      let qty = Number(r.querySelector(".qty").value)||0;
+      let rate = Number(r.querySelector(".rate").value)||0;
+      let total = qty*rate;
+      r.querySelector(".lineTotal").textContent = total;
+      sum+=total;
+    });
+    document.getElementById("accTotal").value=sum;
+    recalcTotal();
+  }
+
+  function recalcTotal(){
+    let charges=document.querySelectorAll(".charge");
+    let sum=0;
+    charges.forEach(c=> sum+=Number(c.value)||0);
+    document.getElementById("grandTotal").textContent=sum;
+  }
+
+  document.querySelectorAll(".qty,.rate").forEach(inp=> inp.addEventListener("input", recalcAccessories));
+  document.querySelectorAll(".charge").forEach(inp=> inp.addEventListener("input", recalcTotal));
+</script>
+</body>
+</html>
